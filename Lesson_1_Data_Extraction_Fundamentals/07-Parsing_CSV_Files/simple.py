@@ -16,9 +16,20 @@ DATAFILE = "beatles-diskography.csv"
 def parse_file(datafile):
     data = []
     with open(datafile, "rb") as f:
-        for line in f:
-            print line
+        header = f.readline()
+        header = str(header)
+        header = header.strip("\n")
+        header = header.split(",")
 
+        for line in f:
+            line_str = str(line)
+            line_str = line_str.strip("\n")
+            dumm = line_str.split(",")
+            myline = {}
+            for i, val in enumerate(header):
+                myline[val] = dumm[i]
+            data.append(myline)
+            print(line)
     return data
 
 
