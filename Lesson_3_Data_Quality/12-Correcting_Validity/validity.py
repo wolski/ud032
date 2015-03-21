@@ -23,23 +23,40 @@ INPUT_FILE = 'autos.csv'
 OUTPUT_GOOD = 'autos-valid.csv'
 OUTPUT_BAD = 'FIXME-autos.csv'
 
+def writeres(file, header, whatlist):
+    with open(file, "w") as g:
+        writer = csv.DictWriter(g, delimiter=",", fieldnames= header)
+        writer.writeheader()
+        for row in whatlist:
+            writer.writerow(row)
+    g.close()
+
 def process_file(input_file, output_good, output_bad):
 
+    goodrows = []
+    badrows = []
     with open(input_file, "r") as f:
         reader = csv.DictReader(f)
         header = reader.fieldnames
 
-        #COMPLETE THIS FUNCTION
+        for row in reader:
 
+            year = row["productionStartYear"].split("-")[0]
+            uri = row["URI"]
+            if "dbpedia.org" in uri:
+                print uri
+                if year.isdigit():
+                    year = int(year)
+                    if year > 1886 and year < 2014:
+                        row["productionStartYear"] = year
+                        goodrows.append(row)
+                    else:
+                        badrows.append(row)
+                else:
+                    badrows.append(row)
 
-
-    # This is just an example on how you can use csv.DictWriter
-    # Remember that you have to output 2 files
-    with open(output_good, "w") as g:
-        writer = csv.DictWriter(g, delimiter=",", fieldnames= header)
-        writer.writeheader()
-        for row in YOURDATA:
-            writer.writerow(row)
+    writeres(output_good, header, goodrows)
+    writeres(output_bad, header, badrows)
 
 
 def test():

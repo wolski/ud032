@@ -13,6 +13,11 @@ def get_root(fname):
     tree = ET.parse(fname)
     return tree.getroot()
 
+def write_list(filename, content):
+    with open(filename, "w") as g:
+        for line in content:
+            g.write(line)
+    g.close()
 
 def split_file(filename):
     # we want you to split the input file into separate files
@@ -21,7 +26,19 @@ def split_file(filename):
     # The new files should be saved with filename in the following format:
     # "{}-{}".format(filename, n) where n is a counter, starting from 0.
 
-    pass
+    count = 0
+    with open(filename, "r") as xml:
+        tmpres = []
+        for x in xml:
+            if '<?xml version="1.0" encoding="UTF-8"?>' in x:
+                if count > 0:
+                    write_list("{}-{}".format(filename, count -1), tmpres)
+                count += 1
+                tmpres = []
+            tmpres.append(x)
+
+    write_list("{}-{}".format(filename, count-1), tmpres)
+
 
 
 def test():

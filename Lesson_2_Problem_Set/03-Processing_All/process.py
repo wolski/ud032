@@ -11,6 +11,7 @@
 from bs4 import BeautifulSoup
 from zipfile import ZipFile
 import os
+import copy
 
 datadir = "data"
 
@@ -41,18 +42,42 @@ def process_file(f):
     # ]
     data = []
     info = {}
-    info["courier"], info["airport"] = f[:6].split("-")
-    
-    with open("{}/{}".format(datadir, f), "r") as html:
 
+    info["courier"], info["airport"] = f[:6].split("-")
+
+
+    with open("{}/{}".format(datadir, f), "r") as html:
         soup = BeautifulSoup(html)
+        table = soup.find('table',id="DataGrid1")
+        rows = table.find_all('tr')
+
+        nrow = len(rows)
+        for rowidx in range(1,nrow - 1):
+            row = rows[rowidx]
+            work = []
+            cells = row.find_all("td")
+
+            for cell in cells:
+                work.append(cell.get_text())
+
+            try:
+                info["year"] = int(work[0])
+                info["month"] = int(work[1])
+                domestic = work[2].replace(",", "")
+                international = work[3].replace(",", "")
+                info["flights"] = {"domestic" : int(domestic), "international" : int(international)}
+                data.append(copy.deepcopy(info))
+            except ValueError:
+                print("test")
+
+
 
     return data
 
 
 def test():
     print "Running a simple test..."
-    open_zip(datadir)
+    #open_zip(datadir)
     files = process_all(datadir)
     data = []
     for f in files:

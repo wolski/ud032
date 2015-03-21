@@ -33,13 +33,39 @@ def get_from_file(kind, period):
     with open(filename, "r") as f:
         return json.loads(f.read())
 
+def process_media_metadata(media):
+    url = []
+    for element in media:
+        if element["format"] == "Standard Thumbnail":
+            url.append(element["url"])
+    return url
+
+def process_media(media):
+    url = []
+    for entries in media:
+        for key, value in entries.iteritems():
+            if key == "media-metadata":
+                url += process_media_metadata(value)
+    return url
+
 
 def article_overview(kind, period):
     data = get_from_file(kind, period)
     titles = []
     urls =[]
-    # YOUR CODE HERE
-
+    for assets in data:
+        sektion = ""
+        title = ""
+        for key, value in assets.iteritems():
+            if key == "section":
+                sektion = value
+            if key == "title":
+                title = value
+            if key == "media":
+                tmp = process_media(value)
+                if tmp is not None:
+                    urls += tmp
+        titles.append({sektion: title})
     return (titles, urls)
 
 

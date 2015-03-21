@@ -21,18 +21,27 @@ DATAFILE = "745090.csv"
 
 
 def parse_file(datafile):
-    name = ""
     data = []
+    name = ""
     with open(datafile,'rb') as f:
-        pass
-    # Do not change the line below
-    return (name, data)
+        spamreader = csv.reader(f, delimiter=',', quotechar='"')
+        firstline = spamreader.next()
+        name = str(firstline[1])
+        header = spamreader.next()
+        for row in spamreader:
+            data.append(row)
+
+    return name, data
 
 
 def test():
     datafile = os.path.join(DATADIR, DATAFILE)
     name, data = parse_file(datafile)
 
+    name = "{0}".format(name)
+    print(name)
+    nam2 = "MOUNTAIN VIEW MOFFETT FLD NAS"
+    print(name == nam2)
     assert name == "MOUNTAIN VIEW MOFFETT FLD NAS"
     assert data[0][1] == "01:00"
     assert data[2][0] == "01/01/2005"
