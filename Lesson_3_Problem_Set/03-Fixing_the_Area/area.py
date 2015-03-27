@@ -21,10 +21,20 @@ CITIES = 'cities.csv'
 
 
 def fix_area(area):
-
     # YOUR CODE HERE
+    if area != "NULL":
+        area = area.replace("{", "")
+        area = area.replace("}", "")
+        area = area.split("|")
+        if len(area) == 1:
+            return float(area[0])
+        if len(area[0]) > len(area[1]):
+            return float(area[0])
+        else:
+            return float(area[1])
+    else:
+        return None
 
-    return area
 
 
 

@@ -25,7 +25,12 @@ CITIES = 'cities.csv'
 
 def check_loc(point, lat, longi):
     # YOUR CODE HERE
-    
+    print point, "--", lat, "--", longi
+    coors = point.split(" ")
+    if coors[0] == lat and coors[1] == longi:
+        return True
+    else:
+        return False
     pass
 
 

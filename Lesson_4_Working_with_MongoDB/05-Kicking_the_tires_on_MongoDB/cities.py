@@ -40,7 +40,8 @@ def get_db():
     return db
 
 def add_city(db):
-    db.cities.insert({"name" : "Chicago"})
+    db.cities.insert({"name": "Chicago"})
+    db.cities.insert({"name": "Chicagoes"})
     
 def get_city(db):
     return db.cities.find_one()
@@ -48,6 +49,10 @@ def get_city(db):
 
 if __name__ == "__main__":
 
-    db = get_db() # uncomment this line if you want to run this locally
+    db = get_db()
     add_city(db)
+    xx = db.cities.find({"name": "Chicago"})
+    print(xx)
+    for x in xx:
+        print x
     print get_city(db)
